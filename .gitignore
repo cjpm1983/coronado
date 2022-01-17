@@ -5,3 +5,7 @@ dist/
 lib/
 lib64/
 venv/pyvenv.cfg
+coronado/coronado/__pycache__/
+coronado/catalogo/__pycache__/
+coronado/catalogo/migrations/__pycache__/
+coronado/.vscode/
