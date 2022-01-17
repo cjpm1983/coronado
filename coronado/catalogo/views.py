@@ -95,8 +95,11 @@ class CatalogoViewSet(viewsets.ModelViewSet):
         autor_name = self.request.query_params.get('autor', "")
         titulo_name= self.request.query_params.get('titulo', "")
 
-        if 'autor' not in self.request.query_params and 'titulo' not in self.request.query_params:
+        if 'autor' not in self.request.query_params and 'titulo' not in self.request.query_params:    
             queryset = Catalogo.objects.all()
+        elif (autor_name is not None and titulo_name is not None):
+            queryset = Catalogo.objects.filter(autor__icontains=autor_name, titulo__icontains=titulo_name).all()
+            #catalogos_list = Catalogo.objects.all()
         elif (autor_name is not None):
             queryset = Catalogo.objects.filter(autor__icontains=autor_name).all()
             #catalogos_list = Catalogo.objects.all()
