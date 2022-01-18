@@ -2,7 +2,7 @@ from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
 
 #from django.contrib.auth.decorators import login_required
-from catalogo.models import Catalogo
+from catalogo.models import Catalogo_Coronado as Catalogo
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 import re
