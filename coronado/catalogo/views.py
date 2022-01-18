@@ -57,3 +57,56 @@ def HomeView(request):
 
     
     return render(request,'catalogo/catalogos.html',{'catalogos':catalogos})
+
+
+
+#filetr
+import django_filters
+class CatalogoFilter(django_filters.FilterSet):
+    autor = django_filters.CharFilter(name="autor", lookup_type="contains")
+    titulo = django_filters.CharFilter(name="titulo", lookup_type="contains")
+
+    class Meta:
+        model = Catalogo
+        fields = ['autor', 'titulo']
+
+from catalogo.serializers import CatalogoSerializer
+from rest_framework import viewsets
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
+class CatalogoViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = Catalogo.objects.all()
+    serializer_class = CatalogoSerializer
+    #permission_classes = [permissions.IsAuthenticated]
+    http_method_names = ['get', 'head']
+    
+    #filter_backends = [DjangoFilterBackend]
+    #filterset_fields = ['autor', 'titulo']
+    
+    #filter_backends = [filters.SearchFilter]
+    #search_fields = ['autor', 'titulo']
+
+    #filter_class = CatalogoFilter
+
+    def get_queryset(self):
+        autor_name = self.request.query_params.get('autor', "")
+        titulo_name= self.request.query_params.get('titulo', "")
+
+        if 'autor' not in self.request.query_params and 'titulo' not in self.request.query_params:    
+            queryset = Catalogo.objects.all()
+        elif (autor_name is not None and titulo_name is not None):
+            queryset = Catalogo.objects.filter(autor__icontains=autor_name, titulo__icontains=titulo_name).all()
+            #catalogos_list = Catalogo.objects.all()
+        elif (autor_name is not None):
+            queryset = Catalogo.objects.filter(autor__icontains=autor_name).all()
+            #catalogos_list = Catalogo.objects.all()
+        elif (titulo_name is not None):
+            #return HttpResponseRedirect('/thanks/'+str(valor))
+            queryset = Catalogo.objects.filter(titulo__icontains=titulo_name).all()  
+        else:
+            queryset = Catalogo.objects.all()
+
+        return queryset

@@ -14,13 +14,22 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
-from catalogo.views import HomeView
+from catalogo.views import HomeView, CatalogoViewSet
 
 admin.site.site_header = 'Catálogo Coronado'
 
+
+from rest_framework import routers
+
+router = routers.DefaultRouter()
+router.register(r'catalogos', CatalogoViewSet)
+router.register(r'catalogos/(?P<autor>\d+)/?$', CatalogoViewSet)
+router.register(r'catalogos/(?P<titulo>\d+)/?$', CatalogoViewSet)
+
 urlpatterns = [
+    path("api/", include(router.urls)),
     path("", HomeView, name="home"),
     path('admin/', admin.site.urls),
 ]
