@@ -10,6 +10,12 @@ from unicodedata import normalize
 from django.db.models import Q
 #from unidecode import unidecode
 
+def convert(val):
+    s = val
+    s = re.sub(r"([^n\u0300-\u036f]|n(?!\u0303(?![\u0300-\u036f])))[\u0300-\u036f]+", r"\1", normalize( "NFD", s), 0, re.I )
+    s = normalize( 'NFC', s)
+    return s
+
 # Create your views here.
 
 #@login_required(login_url="")
@@ -21,23 +27,20 @@ def HomeView(request):
         filter = request.POST['filter']
         valor = request.POST['valor']
         
-        #quitar acentos
-        s = valor
-        s = re.sub(r"([^n\u0300-\u036f]|n(?!\u0303(?![\u0300-\u036f])))[\u0300-\u036f]+", r"\1", normalize( "NFD", s), 0, re.I )
-        #s = unidecode(s)
-        # -> NFC
-        s = normalize( 'NFC', s)
-
-        #print( s )
-
         if (filter=="autor"):
             #return HttpResponseRedirect('/thanks/'+str(valor))
             #catalogos_list = Catalogo.objects.filter(Q(autor__icontains=valor)|Q(autor__icontains=s)).all()#.order_by('id')
-            catalogos_list = Catalogo.objects.filter(autor__icontains=valor).all()
+            catalogos_list = Catalogo.objects.filter(Q(autor__icontains=valor)|Q(autor__icontains=convert(valor))).all()
+            #catalogos_list1 = Catalogo.objects.filter(autor__icontains=valor).all()
+            #catalogos_list2 = Catalogo.objects.filter(autor__icontains=convert(valor)).all()
+            #catalogos_list = catalogos_list1 | catalogos_list2
+            
             #catalogos_list = Catalogo.objects.all()
         if (filter=="titulo"):
             #return HttpResponseRedirect('/thanks/'+str(valor))
-            catalogos_list = Catalogo.objects.filter(titulo__icontains=valor).all()
+            catalogos_list = Catalogo.objects.filter(Q(titulo__icontains=valor)|Q(titulo__icontains=convert(valor))).all()
+            #catalogos_list2 = Catalogo.objects.filter().all()
+            #catalogos_list = catalogos_list1 | catalogos_list2
             #catalogos_list = Catalogo.objects.filter(Q(titulo__icontains=valor)|Q(titulo__icontains=s)).all()#.order_by('id')
             #catalogos_list = Catalogo.objects.all()
 
@@ -70,7 +73,8 @@ class CatalogoFilter(django_filters.FilterSet):
         model = Catalogo
         fields = ['autor', 'titulo']
 
-from catalogo.serializers import CatalogoSerializer
+
+from catalogo.serializers import CatalogoCoronadoSerializer as CatalogoSerializer
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
@@ -98,14 +102,16 @@ class CatalogoViewSet(viewsets.ModelViewSet):
         if 'autor' not in self.request.query_params and 'titulo' not in self.request.query_params:    
             queryset = Catalogo.objects.all()
         elif (autor_name is not None and titulo_name is not None):
-            queryset = Catalogo.objects.filter(autor__icontains=autor_name, titulo__icontains=titulo_name).all()
+            queryset = Catalogo.objects.filter(Q(autor__icontains=autor_name, titulo__icontains=titulo_name)|Q(autor__icontains=convert(autor_name), titulo__icontains=convert(titulo_name))).all()
+            
             #catalogos_list = Catalogo.objects.all()
         elif (autor_name is not None):
-            queryset = Catalogo.objects.filter(autor__icontains=autor_name).all()
+            queryset = Catalogo.objects.filter(Q(autor__icontains=autor_name)|Q(autor__icontains=convert(autor_name))).all()
+
             #catalogos_list = Catalogo.objects.all()
         elif (titulo_name is not None):
             #return HttpResponseRedirect('/thanks/'+str(valor))
-            queryset = Catalogo.objects.filter(titulo__icontains=titulo_name).all()  
+            queryset = Catalogo.objects.filter(Q(titulo__icontains=titulo_name)|Q(titulo__icontains=convert(titulo_name))).all()
         else:
             queryset = Catalogo.objects.all()
 

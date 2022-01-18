@@ -47,8 +47,10 @@ class Catalogo_Coronado(models.Model):
     ano_de_publicacion = models.CharField(max_length=255,db_column='AnoPublicacion', blank=True, null=True)
     proveedor = models.CharField(max_length=255,db_column='Proveedor', blank=True, null=True)
     sala = models.CharField(max_length=255,db_column='Sala', blank=True, null=True)
-    cantidad_titulos = models.IntegerField(db_column='CantidadTitulos', blank=True, null=True)
-    ejemplares = models.IntegerField(db_column='Ejemplares', blank=True, null=True)
+    #cantidad_titulos = models.IntegerField(db_column='CantidadTitulos', blank=True, null=True)
+    cantidad_titulos = models.CharField(max_length=255, db_column='CantidadTitulos', blank=True, null=True)
+    #ejemplares = models.IntegerField(db_column='Ejemplares', blank=True, null=True)
+    ejemplares = models.CharField(max_length=255, db_column='Ejemplares', blank=True, null=True)
     pais = models.CharField(max_length=255,db_column='Pais', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
     idioma = models.CharField(max_length=255,db_column='Idioma', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
     tipo_documento = models.CharField(max_length=255,db_column='TipoDocumento', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters. This field type is a guess.
@@ -56,13 +58,15 @@ class Catalogo_Coronado(models.Model):
     via_adquisicion = models.CharField(max_length=255,db_column='ViaAdquisicion', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
     clasificacion = models.CharField(max_length=255,db_column='Clasificacion', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
     notas = models.CharField(max_length=255,db_column='Notas', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
-    baja = models.IntegerField(db_column='Baja', blank=True, null=True)
+    #baja = models.IntegerField(db_column='Baja', blank=True, null=True)
+    baja = models.CharField(max_length=255,db_column='Baja', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
     
     editorial = models.CharField(max_length=255,db_column='Editorial', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
 
     estado_conservacion = models.CharField(max_length=255,db_column='EstadoConservacion', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
     materia = models.CharField(max_length=255,db_column='Materia', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
-    volumenes = models.IntegerField(db_column='Volumenes', blank=True, null=True)
+    #volumenes = models.IntegerField(db_column='Volumenes', blank=True, null=True)
+    volumenes = models.CharField(max_length=255, db_column='Volumenes', blank=True, null=True)
      
     class Meta:
         managed = False

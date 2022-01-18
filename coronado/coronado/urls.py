@@ -25,8 +25,6 @@ from rest_framework import routers
 
 router = routers.DefaultRouter()
 router.register(r'catalogos', CatalogoViewSet)
-router.register(r'catalogos/(?P<autor>\d+)/?$', CatalogoViewSet)
-router.register(r'catalogos/(?P<titulo>\d+)/?$', CatalogoViewSet)
 
 urlpatterns = [
     path("api/", include(router.urls)),
