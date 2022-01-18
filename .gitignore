@@ -1,0 +1,7 @@
+venv/
+wenv/
+build/
+dist/
+lib/
+lib64/
+venv/pyvenv.cfg
